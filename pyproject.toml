@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-server-example"
+version = "0.1.0"
+description = "A minimal FastMCP server that connects to the Connext platform via OAuth, with a login page, an example tool, and an example MCP App."
+requires-python = ">=3.11"
+dependencies = [
+    "fastmcp>=3.4,<4",
+]
+
+[tool.setuptools]
+py-modules = ["server", "auth", "tools"]
