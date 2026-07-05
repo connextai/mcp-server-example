@@ -15,6 +15,9 @@ from __future__ import annotations
 
 import os
 
+from starlette.requests import Request
+from starlette.responses import PlainTextResponse
+
 from fastmcp import FastMCP
 
 from auth import DEMO_USERS, LoginOAuthProvider, register_login_routes
@@ -38,6 +41,14 @@ mcp = FastMCP("Acme MCP Example", auth=provider)
 # Add our custom login page and register the example tools.
 register_login_routes(mcp, provider)
 register_tools(mcp)
+
+
+# An unauthenticated liveness/readiness probe. The GKE Ingress BackendConfig and
+# the Kubernetes probes hit GET /health; it must NOT require a bearer token, so
+# it is a plain custom route outside the MCP auth surface.
+@mcp.custom_route("/health", methods=["GET"])
+async def health(_request: Request) -> PlainTextResponse:
+    return PlainTextResponse("ok")
 
 
 if __name__ == "__main__":
